@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["https://ivanish-lab.github.io"], // Замените на ваш адрес
+    origin: ["ivanish-lab.github.io"], // Замените на ваш адрес
     methods: ["GET", "POST"]
   }
 });
