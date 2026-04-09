@@ -8,9 +8,11 @@ const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
+
+// Замените 'your-username' на ваше имя пользователя GitHub
 const io = socketIo(server, {
   cors: {
-    origin: ["ivanish-lab.github.io"], // Замените на ваш адрес
+    origin: ["http://localhost:3000", "https://ivanish-lab.github.io"],
     methods: ["GET", "POST"]
   }
 });
