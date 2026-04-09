@@ -1,0 +1,141 @@
+z<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Админ-панель</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginPanel" class="screen active">
+    <h2>Вход в админ-панель</h2>
+    <input type="text" id="adminLogin" placeholder="Логин" value="admin">
+    <input type="password" id="adminPassword" placeholder="Пароль">
+    <button onclick="adminLogin()">Войти</button>
+    <div id="loginError" class="error"></div>
+  </div>
+
+  <div id="adminPanel" class="screen">
+    <h2>Администрирование</h2>
+    <button onclick="adminLogout()" style="float:right;">Выйти</button>
+    <button onclick="loadPlayers()">Обновить список игроков</button>
+    <table id="playersTable" border="1" style="margin-top:20px; width:100%; color:black; background:white;">
+      <thead><tr><th>Имя</th><th>Баланс</th><th>Действие</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    let adminToken = localStorage.getItem('adminToken');
+
+    function showPanel(panelId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    async function adminLogin() {
+      const login = document.getElementById('adminLogin').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      if (!login || !password) {
+        document.getElementById('loginError').innerText = 'Введите логин и пароль';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          adminToken = data.token;
+          localStorage.setItem('adminToken', adminToken);
+          document.getElementById('loginError').innerText = '';
+          showPanel('adminPanel');
+          loadPlayers();
+        } else {
+          document.getElementById('loginError').innerText = data.error || 'Ошибка входа';
+        }
+      } catch (e) {
+        document.getElementById('loginError').innerText = 'Ошибка соединения';
+      }
+    }
+
+    async function adminLogout() {
+      if (adminToken) {
+        await fetch('/api/admin/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: adminToken })
+        });
+      }
+      adminToken = null;
+      localStorage.removeItem('adminToken');
+      showPanel('loginPanel');
+      document.getElementById('adminPassword').value = '';
+    }
+
+    async function apiCall(endpoint, method = 'GET', body = null) {
+      const headers = { 'x-admin-token': adminToken };
+      if (body) headers['Content-Type'] = 'application/json';
+      const res = await fetch(endpoint, { method, headers, body: body ? JSON.stringify(body) : undefined });
+      if (res.status === 403) {
+        alert('Сессия истекла или недействительна. Пожалуйста, войдите заново.');
+        adminLogout();
+        throw new Error('Unauthorized');
+      }
+      return res.json();
+    }
+
+    async function loadPlayers() {
+      if (!adminToken) {
+        showPanel('loginPanel');
+        return;
+      }
+      try {
+        const players = await apiCall('/api/admin/players');
+        const tbody = document.querySelector('#playersTable tbody');
+        tbody.innerHTML = '';
+        players.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${p.username}</td>
+            <td id="bal-${p.username}">${p.balance}</td>
+            <td>
+              <input type="number" id="amt-${p.username}" value="100">
+              <button onclick="changeBalance('${p.username}', 1)">+</button>
+              <button onclick="changeBalance('${p.username}', -1)">-</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error('Ошибка загрузки игроков', e);
+      }
+    }
+
+    async function changeBalance(username, sign) {
+      if (!adminToken) return;
+      const amountInput = document.getElementById(`amt-${username}`);
+      let amount = parseInt(amountInput.value) * sign;
+      try {
+        const data = await apiCall('/api/admin/balance', 'POST', { username, amount });
+        if (data.success) {
+          document.getElementById(`bal-${username}`).innerText = data.newBalance;
+        } else {
+          alert('Ошибка: ' + data.error);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (adminToken) {
+      showPanel('adminPanel');
+      loadPlayers();
+    } else {
+      showPanel('loginPanel');
+    }
+  </script>
+</body>
+</html>

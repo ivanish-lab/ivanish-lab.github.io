@@ -1,0 +1,166 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #1a3b1a;
+  color: white;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.screen {
+  display: none;
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(5px);
+}
+
+.screen.active {
+  display: block;
+}
+
+input, button, select {
+  padding: 12px 15px;
+  margin: 5px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+button {
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+button:disabled {
+  background: #888;
+  cursor: not-allowed;
+}
+
+button.active {
+  background: #ff9800;
+  box-shadow: 0 0 10px #ff9800;
+}
+
+.stake-btn {
+  min-width: 75px;
+}
+
+.error {
+  color: #ffaaaa;
+  margin-top: 10px;
+}
+
+.room-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-item button {
+  padding: 6px 18px;
+}
+
+#roomsList {
+  max-height: 350px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+/* Карты */
+.card {
+  display: inline-block;
+  width: 80px;
+  height: 120px;
+  background: white;
+  color: black;
+  border-radius: 8px;
+  margin: 5px;
+  text-align: center;
+  line-height: 120px;
+  font-size: 28px;
+  font-weight: bold;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  user-select: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 4px 8px 12px rgba(0,0,0,0.5);
+}
+
+.card.red {
+  color: #d32f2f;
+}
+
+.card.selected {
+  border: 4px solid gold;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px gold;
+}
+
+/* Стол */
+#tableCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  min-height: 140px;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.card-pair {
+  display: flex;
+  position: relative;
+}
+
+.card-pair .card {
+  margin-right: -40px;
+  transition: margin 0.1s, transform 0.1s;
+}
+
+.card-pair .card:hover {
+  margin-right: 0;
+  margin-left: 10px;
+  z-index: 10;
+  transform: translateY(-5px);
+  box-shadow: 4px 8px 12px rgba(0,0,0,0.6);
+}
+
+#playerHand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#gameInfo {
+  font-size: 18px;
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#gameControls button {
+  margin: 5px 10px;
+  padding: 12px 25px;
+  font-size: 18px;
+}

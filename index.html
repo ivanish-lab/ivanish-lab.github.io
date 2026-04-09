@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дурак Онлайн</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div id="loginScreen" class="screen active">
+    <h2>Вход в игру</h2>
+    <input type="text" id="usernameInput" placeholder="Ваше имя" maxlength="20">
+    <input type="password" id="passwordInput" placeholder="Пароль">
+    <button onclick="login()">Войти / Зарегистрироваться</button>
+    <div id="loginError" class="error"></div>
+  </div>
+
+  <div id="lobbyScreen" class="screen">
+    <h2>Лобби</h2>
+    <div>Баланс: <span id="balanceDisplay">0</span> 💰</div>
+
+    <div style="margin: 20px 0;">
+      <div style="margin-bottom: 10px;">
+        <label>Ставка:</label>
+        <span id="selectedStakeDisplay">100</span> 💰
+      </div>
+      <div id="stakeButtons" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;"></div>
+
+      <select id="gameTypeSelect" style="margin-top: 10px; padding: 10px; font-size: 16px;">
+        <option value="throw">Подкидной</option>
+        <option value="transfer">Переводной</option>
+      </select>
+
+      <button onclick="createRoom()" style="margin-top: 10px;">Создать комнату</button>
+    </div>
+
+    <div>
+      <input type="text" id="roomIdInput" placeholder="Код комнаты">
+      <button onclick="joinRoom()">Присоединиться по коду</button>
+      <button onclick="refreshRooms()">Обновить</button>
+    </div>
+
+    <h3>Активные комнаты</h3>
+    <div id="roomsList">Загрузка...</div>
+    <div id="lobbyError" class="error"></div>
+  </div>
+
+  <div id="roomScreen" class="screen">
+    <h2>Комната <span id="roomIdDisplay"></span></h2>
+    <div>Ставка: <span id="roomStake">0</span> 💰</div>
+    <div>Тип игры: <span id="roomGameType"></span></div>
+    <div>Игроки: <span id="playersList"></span></div>
+    <button id="startGameBtn" onclick="startGame()" disabled>Начать игру</button>
+    <button onclick="leaveRoom()">Выйти</button>
+  </div>
+
+  <div id="gameScreen" class="screen">
+    <h2>Игра</h2>
+    <div id="gameInfo" style="margin-bottom: 15px;"></div>
+    <div id="opponentInfo" style="margin-bottom: 10px;"></div>
+    <div id="tableCards" style="min-height: 120px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;"></div>
+    <div id="playerHand" style="margin-top: 20px;"></div>
+    <div id="gameControls" style="margin-top: 20px;"></div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
