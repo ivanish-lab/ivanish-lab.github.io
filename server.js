@@ -9,9 +9,11 @@ const crypto = require('crypto');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
+  cors: {
+    origin: ["https://ivanish-lab.github.io"], // Замените на ваш адрес
+    methods: ["GET", "POST"]
+  }
 });
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
