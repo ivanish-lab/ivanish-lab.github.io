@@ -1,4 +1,4 @@
-const socket = io('https://durak.github.io');
+const socket = io('https://ivanish-lab.github.io');
 let currentUser = null;
 let currentRoom = null;
 let currentStake = 100;
