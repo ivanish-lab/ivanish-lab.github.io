@@ -1,4 +1,4 @@
-const socket = io('https://ivanish-lab.github.io');
+const socket = io('ivanish-lab-github-io.railway.internal');
 let currentUser = null;
 let currentRoom = null;
 let currentStake = 100;
